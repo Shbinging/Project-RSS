@@ -1,6 +1,6 @@
 import re
 import time
-
+import jieba
 class timesplit:
     def ini(self, st):
         self.st = st;
@@ -27,7 +27,7 @@ class timesplit:
         for w in dw:
             try:
                 ret = re.findall(w[0], self.st);
-                if (size(ret) == 0):
+                if (len(ret) == 0):
                     continue;
                 self.sem = w[1];
                 self.st = self.st.replace(ret[0], '');
@@ -117,12 +117,14 @@ class timesplit:
         self.rmin = max(self.rmin, tmp[9]);
         
     def debug(self):
-        print(self.isinter);
+        print("0为时间点，1为时间段：", self.isinter, sep = '');
+        print("学期，年，月，日，小时，分钟"， end = '');
         print(self.sem, self.lyear, self.lmonth, self.lday, self.lh, self.lmin, sep = ' ');
+        print("学期，年，月，日，小时，分钟"， end = '');
         print(self.sem, self.ryear, self.rmonth, self.rday, self.rh, self.rmin, sep = ' ');
         print(self.st)
 
 a = timesplit();
-timesplit.analyze(a, "2019年春季江苏省计算机等级考试报名通知");
+a. analyze(a, "2019年春季江苏省计算机等级考试报名通知");
 
     
