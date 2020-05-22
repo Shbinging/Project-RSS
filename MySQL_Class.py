@@ -4,7 +4,7 @@ import mysql.connector
 config1 = {
         'host': 'localhost',
         'port': 3306,
-        'database': 'comp',
+        'database': 'RSS',
         'user': 'root',
         'password': 'wsy20000812',
         'charset': 'utf8',
@@ -26,6 +26,7 @@ config2={
 create_order = (
      "CREATE TABLE test ("
         "    id INT UNSIGNED NOT NULL AUTO_INCREMENT, "
+        "    status INT NOT NULL DEFAULT 0 , "
         "    time VARCHAR(200) , "
         "    title VARCHAR(200) , "
         "    info LONGTEXT , "  
@@ -37,8 +38,12 @@ create_order = (
 insert_order = "INSERT INTO test (time, title, info, url) VALUES (%s, %s, %s ,%s)"
 #在这里输入插入语句，注意格式第一个括号里面是对应的栏目，后一个括号全部是%s
 
-select_order = "SELECT title, info FROM test ORDER BY id"
+select_order = "SELECT status ,title, info FROM test ORDER BY id"
 #在这里输入MySQL的SELECT语句
+
+update_order = "UPDATE test SET status = %s WHERE id = %s"
+
+delete_order = "DELETE from test WHERE id = %s "
 
 
 class sql:
@@ -79,6 +84,20 @@ class sql:
         except:
             print("Failed to SELECT")
             exit(-1)
+    def update(self,data):
+        try:
+            self.__cur.executemany(update_order,data)
+            self.__cnx.commit()
+            print("Update complete")
+        except:
+            print("Failed to update")
+            exit(-1)
+    def delete(self,data):
+        try:
+            self.__cur.executemany(delete_order,data)
+            self.__cnx.commit()
+        except:
+            print("Failed to delete")
 
 
 if __name__ == "__main__":

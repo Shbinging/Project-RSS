@@ -19,7 +19,7 @@ def askURL(baseurl):
     req = urllib.request.Request(baseurl,headers=headers)
     html=""
     try:
-        res = urllib.request.urlopen(req)
+        res = urllib.request.urlopen(req,timeout=3000)
         html = res.read().decode("utf-8")
         #print(html)
     except urllib.error.URLError as e:
@@ -105,7 +105,7 @@ def spider(a):
 
 if __name__ == '__main__':
     # final_result = []
-    # for i in range(10,11):
+    # for i in range(1,11):
     #     baseurl = "https://jw.nju.edu.cn/ggtz/list{}.htm".format(str(i))
     #     final_result = final_result+spider(baseurl)
     # for i in final_result:
@@ -113,6 +113,18 @@ if __name__ == '__main__':
     sql1 = mc.sql(mc.config1)
     # sql1.create_table()
     # sql1.lines_insert(final_result)
+
+
+    # get = sql1.select_lines()
+    # for i in get:
+    #     print(i[0],i[1])
+
+
+    data = []
+    for i in range(1,21):
+        data.append([1,i])
+    sql1.update(data)
+
     get = sql1.select_lines()
     for i in get:
-        print(i[0])
+        print(i[0],i[1])
