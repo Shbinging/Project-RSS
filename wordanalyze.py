@@ -1,7 +1,11 @@
 import jieba.posseg as pseg
+import re
 
 with open("text.txt") as fp:
 	st = fp.read();
-	seg_list = pseg.cut(st)#
-	for w in seg_list:
-		print(w.word, w.flag, sep = '/' ,end = ' ');
+	ret = re.findall(r"\d+.年", st);
+	ret = re.findall(r".{2}学期", st);
+	ret = re.findall()
+	print(ret);
+	
+	
