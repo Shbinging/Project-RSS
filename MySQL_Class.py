@@ -4,9 +4,9 @@ import mysql.connector
 config1 = {
         'host': 'localhost',
         'port': 3306,
-        'database': 'RSS',
+        'database': 'test',
         'user': 'root',
-        'password': 'wsy20000812',
+        'password': 'abc@123',
         'charset': 'utf8',
         'use_unicode': True,
         'get_warnings': True,
@@ -38,7 +38,7 @@ create_order = (
 insert_order = "INSERT INTO test (time, title, info, url) VALUES (%s, %s, %s ,%s)"
 #在这里输入插入语句，注意格式第一个括号里面是对应的栏目，后一个括号全部是%s
 
-select_order = "SELECT title, time , info, url, label FROM test WHERE id IN (1,2,3,4,5,6)"
+select_order = "SELECT title FROM test WHERE id IN (1,2,3,4,5,6)"
 #在这里输入MySQL的SELECT语句
 
 update_order = "UPDATE test SET status = %s WHERE id = %s"
@@ -65,7 +65,7 @@ class sql:
         except:
             print("Failed to create the database")
             exit(-1)
-    def lines_insert(self,data):
+    def lines_insert(self,insert_oder, data):
         try:
             self.__cur.executemany(insert_order,data)
             self.__cnx.commit()
@@ -74,7 +74,7 @@ class sql:
             print("Failed to INSERT")
             # self.feedback()
             exit(-1)
-    def select_lines(self):
+    def select_lines(self,select_order):
         try:
             output = []
             self.__cur.execute(select_order)
@@ -84,7 +84,7 @@ class sql:
         except:
             print("Failed to SELECT")
             exit(-1)
-    def update(self,data):
+    def update(self,update_order, data):
         try:
             self.__cur.executemany(update_order,data)
             self.__cnx.commit()
@@ -92,7 +92,7 @@ class sql:
         except:
             print("Failed to update")
             exit(-1)
-    def delete(self,data):
+    def delete(self,delete_order, data):
         try:
             self.__cur.executemany(delete_order,data)
             self.__cnx.commit()
@@ -102,11 +102,8 @@ class sql:
 
 if __name__ == "__main__":
     sql1 = sql(config1)
-    info = "abc"
-    data = [['Geert', info, 30], ['Jan', info, 31], ['Michel', info, 32]]
-    sql1.create_table()
-    sql1.lines_insert(data)
-    result = sql1.select_lines()
+    result = sql1.select_lines("SELECT title FROM test WHERE id IN (1,2,3,4,5,6)");
+    print(result);
    
 
         
