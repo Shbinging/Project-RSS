@@ -4,10 +4,9 @@ import urllib.request,urllib.error
 import csv
 import codecs
 import pymysql
-import MySQL_Class as mc
-import mailClass as ml
-import timeAnalyze as ta
-
+import mysqlClass as mc
+#import mailClass as ml
+#import timeAnalyze as ta
 
 
 re_url = re.compile(r'<a href="(.*htm)"')
@@ -106,29 +105,33 @@ def spider(a):
      return result
 
 if __name__ == '__main__':
+#----------------------------------
+#数据库测试
     # final_result = []
-    # for i in range(1,11):
+    # for i in range(1,5):
     #     baseurl = "https://jw.nju.edu.cn/ggtz/list{}.htm".format(str(i))
     #     final_result = final_result+spider(baseurl)
     # for i in final_result:
     #     print(i)
     sql1 = mc.sql(mc.config1)
-    # sql1.create_table()
-    # sql1.lines_insert(final_result)
+    # sql1.create_table(1)
+    # sql1.lines_insert(1,final_result)
+    
+    get = sql1.select_lines(1)
+    for i in get:
+        print(i[0],i[1])
 
 
-    # get = sql1.select_lines()
-    # for i in get:
-    #     print(i[0],i[1])
-
-
+#----------------------------------
+#邮件测试
     # data = []
     # for i in range(1,21):
     #     data.append([1,i])
     # sql1.update(data)
     # users = ['1065254539@qq.com']
-    get = sql1.select_lines()
+    # get = sql1.select_lines()
     
+
     # mails = []
     # for i in get:
     #     i = list(i)
@@ -138,8 +141,11 @@ if __name__ == '__main__':
     #     a = ml.mail(mail,users)
     #     a.confirmToSend()
 
-    a = ta.timesplit()
+#--------------------------------
+#内容识别测试
+
+    # a = ta.timesplit()
     
-    for i in get:
-        a.analyze(str(i))
+    # for i in get:
+    #     a.analyze(str(i))
    

@@ -23,8 +23,21 @@ config2={
         'get_warnings': True,
 }
 
-create_order = (
-     "CREATE TABLE test ("
+
+
+create_order=[
+(       "CREATE TABLE test ("
+        "    id INT UNSIGNED NOT NULL AUTO_INCREMENT, "
+        "    status INT NOT NULL DEFAULT 0 , "
+        "    time VARCHAR(200) , "
+        "    title VARCHAR(200) , "
+        "    info LONGTEXT , "  
+        "    url TEXT , "
+        "    label TEXT , "
+        "PRIMARY KEY (id))"
+),
+
+(       "CREATE TABLE test2 ("
         "    id INT UNSIGNED NOT NULL AUTO_INCREMENT, "
         "    status INT NOT NULL DEFAULT 0 , "
         "    time VARCHAR(200) , "
@@ -34,16 +47,33 @@ create_order = (
         "    label TEXT , "
         "PRIMARY KEY (id))"
 )
+]
 
-insert_order = "INSERT INTO test (time, title, info, url) VALUES (%s, %s, %s ,%s)"
+insert_order=[
+"INSERT INTO test (time, title, info, url) VALUES (%s, %s, %s ,%s)",
+
+"INSERT INTO test2 (time, title, info, url) VALUES (%s, %s, %s ,%s)"
 #在这里输入插入语句，注意格式第一个括号里面是对应的栏目，后一个括号全部是%s
+]
 
-select_order = "SELECT title FROM test WHERE status = 0"
+select_order=[
+"SELECT title FROM test WHERE status = 0",
+
+"SELECT title , time FROM test2 WHERE status = 0"
 #在这里输入MySQL的SELECT语句
+]
 
-update_order = "UPDATE test SET status = %s WHERE id = %s"
+update_order=[
+"UPDATE test SET status = %s WHERE id = %s",
 
-delete_order = "DELETE from test WHERE id = %s "
+"UPDATE test2 SET status = %s WHERE id = %s"
+]
+
+delete_order=[
+"DELETE from test WHERE id = %s ",
+
+"DELETE from test WHERE id = %s "
+]
 
 
 class sql:
@@ -57,44 +87,44 @@ class sql:
             print("Failed to connect")
             exit(-1)
         self.__cur = self.__cnx.cursor()
-    def create_table(self):
+    def create_table(self,ordernum):
         try:
-            self.__cur.execute(create_order)
+            self.__cur.execute(create_order[ordernum])
             self.__cnx.commit()
             print("CREATE complete")
         except:
-            print("Failed to create the database")
-            exit(-1)
-    def lines_insert(self,data):
+            print("Failed to create the table, or the table had been created")
+    def lines_insert(self,ordernum,data):
         try:
-            self.__cur.executemany(insert_order,data)
+            self.__cur.executemany(insert_order[ordernum],data)
             self.__cnx.commit()
             print("Insert complete")
         except:
             print("Failed to INSERT")
             # self.feedback()
             exit(-1)
-    def select_lines(self):
+    def select_lines(self,ordernum):
         try:
             output = []
-            self.__cur.execute(select_order)
+            self.__cur.execute(select_order[ordernum])
             for row in self.__cur.fetchall():
+                row = list(row)
                 output.append(row)
             return output
         except:
             print("Failed to SELECT")
             exit(-1)
-    def update(self,data):
+    def update(self,ordernum,data):
         try:
-            self.__cur.executemany(update_order,data)
+            self.__cur.executemany(update_order[ordernum],data)
             self.__cnx.commit()
             print("Update complete")
         except:
             print("Failed to update")
             exit(-1)
-    def delete(self,data):
+    def delete(self,ordernum,data):
         try:
-            self.__cur.executemany(delete_order,data)
+            self.__cur.executemany(delete_order[ordernum],data)
             self.__cnx.commit()
         except:
             print("Failed to delete")
@@ -102,11 +132,9 @@ class sql:
 
 if __name__ == "__main__":
     sql1 = sql(config1)
-    info = "abc"
-    data = [['Geert', info, 30], ['Jan', info, 31], ['Michel', info, 32]]
-    sql1.create_table()
-    sql1.lines_insert(data)
-    result = sql1.select_lines()
+    for i in sql1.select_lines(0):
+        print(i[0])
+    
    
 
         
