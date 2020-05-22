@@ -38,7 +38,7 @@ create_order = (
 insert_order = "INSERT INTO test (time, title, info, url) VALUES (%s, %s, %s ,%s)"
 #在这里输入插入语句，注意格式第一个括号里面是对应的栏目，后一个括号全部是%s
 
-select_order = "SELECT status ,title, info FROM test ORDER BY id"
+select_order = "SELECT title, time , info, url, label FROM test WHERE id IN (1,2,3,4,5,6)"
 #在这里输入MySQL的SELECT语句
 
 update_order = "UPDATE test SET status = %s WHERE id = %s"

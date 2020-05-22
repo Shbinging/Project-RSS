@@ -5,6 +5,7 @@ import csv
 import codecs
 import pymysql
 import MySQL_Class as mc
+import mailClass as ml
 
 
 
@@ -120,11 +121,19 @@ if __name__ == '__main__':
     #     print(i[0],i[1])
 
 
-    data = []
-    for i in range(1,21):
-        data.append([1,i])
-    sql1.update(data)
-
+    # data = []
+    # for i in range(1,21):
+    #     data.append([1,i])
+    # sql1.update(data)
+    users = ['wsy13638318926@outlook.com','2574945327@qq.com']
     get = sql1.select_lines()
+    
+    mails = []
     for i in get:
-        print(i[0],i[1])
+        i = list(i)
+        i[4] = str(i[4])
+        print(i)
+        mail = ml.mailmaker(i)
+        a = ml.mail(mail,users)
+        a.confirmToSend()
+    
