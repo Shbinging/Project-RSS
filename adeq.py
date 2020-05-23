@@ -99,8 +99,9 @@ class adeqSql(sql):
 		return c;
 
 	def printTable(self):
-		#a = self.getTabletitle();
+		a = self.getTabletitle();
 		b = self.getTableStr();
+		print(a);
 		#for tag in a:
 		#	print(tag[0], '\t', end = '');
 		#print();
@@ -116,6 +117,14 @@ class adeqSql(sql):
 			return tmp;
 		except:
 			print("发生错误queryL");
+			return -1;
+
+	def delKey(self, tagName, name):
+		try:
+			opt = "DELETE FROM %s WHERE %s = "%(self.tableName, tagName) + self.zy(name);
+			tmp = self.update(opt);
+		except:
+			print("发生错误del");
 			return -1;
 
 	def queryH(self, tagName, name):

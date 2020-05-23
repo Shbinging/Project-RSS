@@ -89,7 +89,7 @@ class sql:
         try:
             self.__cur.execute(update_order)
             self.__cnx.commit()
-            print("Update complete")
+            #print("Update complete")
         except:
             print("Failed to update")
             return -1;
