@@ -2,7 +2,10 @@ import mysql.connector;
 from MySQL_Class_Use import sql;
 
 
-config1 = {
+
+
+def makeConfig(databaseName):
+	config = {
         'host': 'localhost',
         'port': 3306,
         'database': 'adeqtest',
@@ -12,8 +15,10 @@ config1 = {
         'use_unicode': True,
         'get_warnings': True,
     }
+	config['database'] = databaseName;
+	return config;
 
-class adeq(sql):
+class adeqSql(sql):
 	def __init__(self, config, tableName):
 		sql.__init__(self, config);
 		self.tableName = tableName;
@@ -46,6 +51,22 @@ class adeq(sql):
 		except:
 			print("发生错误createTable");
 			return -1;
+	def createTable(self, name):
+		try:
+			opt = "create table %s (id INT not null auto_increment, primary key (id))"%(name);
+			self.tableName = name;
+			self.update(opt);
+		except:
+			print("发生错误createTable");
+			return -1;
+
+	def clearTable(self):
+		try:
+			opt = "truncate "+self.tableName;
+			self.update(opt);
+		except:
+			print("发生错误createTable");
+			return -1;
 
 	def hasKey(self, tagName, name):#某一列是否有某个值
 		try:
@@ -57,7 +78,7 @@ class adeq(sql):
 
 	def insertKey(self, tagName, name):
 		try:
-			opt = "insert into f (%s)"%(tagName)+ " values("+ self.zy(name) + ")";
+			opt = "insert into %s (%s)"%(self.tableName, tagName)+ " values("+ self.zy(name) + ")";
 			self.update(opt);
 		except:
 			print("发生错误insertKey");
@@ -128,4 +149,5 @@ class adeq(sql):
 			return -1;
 
 if (__name__ == "__main__"):
-	c = adeq(config1, 'f');
+	c = makeConfig("123");
+	print(c);

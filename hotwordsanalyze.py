@@ -102,7 +102,7 @@ for item in a:
 #人工对数据打标签
 
 data = sql(config1);
-data.create_table("ALTER TABLE test ADD COLUMN act VARCHAR(100)");
+data.create_table("ALTER TABLE test ADD COLUMN act VARCHAR(200)");
 list1 = data.select_lines("SELECT act FROM test");
 list2 = data.select_lines("SELECT title FROM test");
 print(list1);
