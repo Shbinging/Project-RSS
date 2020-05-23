@@ -4,10 +4,12 @@ from adeq import adeqSql;
 import jieba
 import re
 from timeAnalyze import timesplit;
-
+from audienceAnalyze import audiencesplit;
 
 class tagAnalyze:
-    def __init__(self, fromData, fromDataTag, Config, trainName, wordbagName, isToNewSet):#原始数据表，读取的标签,训练数据库config，分析数据库,是否新建
+    def __init__(self,trainName, fromData=0, fromDataTag=0, Config=0, wordbagName=0, isToNewSet=0):#原始数据表，读取的标签,训练数据库config，分析数据库,是否新建
+        if (trainName == "time" or trainName == "audience"):
+            return;
         self.fromData  = fromData;
         self.fromDataTag = fromDataTag;
         self.trainName = trainName;
@@ -171,18 +173,86 @@ class tagAnalyze:
             for word in seg_list:
                 s += self.f(word, pattern);
                 #if (pattern == "交流"):
-                    #print("123", word, self.f(word, pattern));
+                #print(pattern , word, self.f(word, pattern));
             #print(pattern, s, sep = ' ');
             if (s > mx):
                 mx = s;
                 ans = pattern;
         return ans;
 
+    def rfindTime(self, rst, backTime):#2012-12-11
+        timeana = timesplit();
+        timer = timeana.getTime(rst);
+        if (timer[1] != -1):
+            st = '';
+            year = 0;
+
+            if (timer[1] == 1):
+
+                st = "秋季学期";
+                year = timer[2][0];
+            if (timer[1] == 2):
+                st = "春季学期";
+                year = timer[2][0] - 1;
+            return str(year)+"-"+str(year+1)+"学年"+st;
+        st = '';
+        if ("暑假" in rst):
+            st = "暑假";
+        if ("寒假" in rst):
+            st = "寒假";
+        a = list(map(int, backTime.split('-')));
+        if (7 <=a[1] and a[1] <=8 and st ==''):
+            st = "暑假";
+        if (9 <= a[1] and a[1] <=12 or a[1] == 1):
+            st = "秋季学期";
+        if (2 <= a[1] and a[1] <= 6):
+            st = "春季学期";
+        year = 0;
+        if (timer[2][0] != -1):
+            year = timer[2][0];
+        else:
+            year = a[0];
+        if (st == '暑假' or st == '寒假'):
+            return str(year) + st;
+        if (st == "秋季学期"):
+            return str(year) + "-" + str(year+1) + "学年"  +st;
+        if (st == "春季学期"):
+            return str(year-1) + "-" + str(year) + "学年" + st;
+    def rfindAudience(self, rst, backTime):
+        a = audiencesplit();
+        return a.find(rst, backTime);
 
 if (__name__ == "__main__"):
     config = makeConfig("notification");
     fromData = adeqSql(config, "test2");
     config1 = makeConfig("tag");
+    
+    backTime = fromData.queryXY("id", 10, "time")[0].split('：')[1];
+    st = fromData.queryXY("id", 10, "title")[0];
+    a = tagAnalyze("audience");
+    print(st);
+    print(backTime);
+    print(a.rfindTime("江苏省计算机等级考试二级Python语言模拟试点考试报名通知 ", "2016-11-10"));
+    """
+    name = "考试_object";
+    a = tagAnalyze(name,fromData, "title", config1, "wordbag", 0);
+    a.analyzeData.printTable();
+    """
+    """
+    name = "课程_activity";
+    a = tagAnalyze(name,fromData, "title", config1, "wordbag", 0);
+    old = tagAnalyze("column",fromData, "title", config1,  "wordbag", 0);
+    a.analyzeTrain();
+    a.analyzeData.printTable();
+
+    """
+    """
+    !!!!!!
+
+    !!!!!!!
+    warning:
+    tagAnalyze 参数顺序改变了
+
     new = 0;
     name = "考试_object";
 
@@ -204,4 +274,5 @@ if (__name__ == "__main__"):
         dataBag = adeqSql(config1, "wordbag");
         dataBag.printTable();
         print(a.refind("2020年春季学期超星尔雅在线课程考试提醒"));
+    """
    

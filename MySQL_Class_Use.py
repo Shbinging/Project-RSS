@@ -53,7 +53,7 @@ class sql:
         try:
             self.__cnx = mysql.connector.connect(**config)
             self.config = config;
-            print("Connected")
+            #print("Connected")
         except:
             print("Failed to connect")
             exit(-1)

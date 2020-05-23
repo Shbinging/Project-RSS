@@ -1,3 +1,4 @@
+#dateutil
 import re
 import time
 import jieba
@@ -23,6 +24,13 @@ class timesplit:
         self.extractYMDHM();
         return self.st;
     
+    def getTime(self, st):
+        self.ini(st);
+        d = self.extractsem();
+        isinter = self.extractLR();
+        self.extractYMDHM();
+        return [self.isinter,self.sem,(self.lyear, self.lmonth, self.lday, self.lh, self.lmin),(self.ryear, self.rmonth, self.rday, self.rh, self.rmin)];
+
     def extractsem(self):
         dw = [('1学期',1), ('上学期',1), ('秋季学期:',1), ('秋季', 1), ('第一学期',1), ('一学期',1), ('下半年',1), ('2学期',2), ('下学期',2), ('春季学期',2), ('春季',2), ('第二学期',2), ('二学期',2), ('上半年',2)];
         for w in dw:
@@ -83,7 +91,7 @@ class timesplit:
         isFind = 0;
         for i in range(0, 8, 2):
             try:
-                st1 = "\d.*"+dw[i//2];
+                st1 = "\d+学*"+dw[i//2];
                 ret = re.findall(st1, self.st);
                 tmp[i] = int(re.findall(r"\d+", ret[0])[0]);
                 self.st = self.st.replace(ret[0], '');
