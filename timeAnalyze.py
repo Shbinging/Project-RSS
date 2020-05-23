@@ -18,19 +18,20 @@ class timesplit:
         self.isinter = 0;
     def analyze(self, st):
         self.ini(st);
-        self.extractsem();
+        d = self.extractsem();
         isinter = self.extractLR();
         self.extractYMDHM();
-        self.debug();
+        return self.st;
+    
     def extractsem(self):
         dw = [('1学期',1), ('上学期',1), ('秋季学期:',1), ('秋季', 1), ('第一学期',1), ('一学期',1), ('下半年',1), ('2学期',2), ('下学期',2), ('春季学期',2), ('春季',2), ('第二学期',2), ('二学期',2), ('上半年',2)];
         for w in dw:
             try:
-                ret = re.findall(w[0], self.st);
-                if (len(ret) == 0):
+                ret1 = re.findall(w[0], self.st);
+                if (len(ret1) == 0):
                     continue;
                 self.sem = w[1];
-                self.st = self.st.replace(ret[0], '');
+                self.st = self.st.replace(ret1[0], '');
                 break;
             except:
                 c = 1;
@@ -117,14 +118,16 @@ class timesplit:
         self.rmin = max(self.rmin, tmp[9]);
         
     def debug(self):
-        print("0为时间点，1为时间段：", self.isinter, sep = '');
-        print("学期，年，月，日，小时，分钟", end = '');
+        print(self.isinter);
         print(self.sem, self.lyear, self.lmonth, self.lday, self.lh, self.lmin, sep = ' ');
-        print("学期，年，月，日，小时，分钟", end = '');
         print(self.sem, self.ryear, self.rmonth, self.rday, self.rh, self.rmin, sep = ' ');
         print(self.st)
 
-a = timesplit();
-a. analyze("2019年春季江苏省计算机等级考试报名通知");
+if (__name__ == "__main__"):
+    with open("text.txt", encoding='utf-8') as fp:
+        st = fp.read();
+        #print(re.findall("第二学期", st));
+        a = timesplit();
+        a.analyze("教务处4月1-10日值班表");
 
     

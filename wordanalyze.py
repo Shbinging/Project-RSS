@@ -1,12 +1,12 @@
 import jieba.posseg as pseg
-import re
 from timeAnalyze import timesplit;
-with open("text.txt") as fp:
+jieba.load_userdict('dict.txt');
+with open("text.txt",  encoding='utf-8') as fp:
     st = fp.read();
-    a = timesplit;
-    a.analyze(st);
+    a = timesplit();
+    st = a.analyze(st);
     seg_list = pseg.cut(st)
     for w in seg_list:
         print(w.word, w.flag, sep = '/' ,end = ' ');
-    ret = re.findall("学期+", st);
-    print(ret);
+
+	

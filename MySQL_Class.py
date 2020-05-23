@@ -1,4 +1,4 @@
-import mysql.connector
+﻿import mysql.connector
 
 
 config1 = {
@@ -13,11 +13,11 @@ config1 = {
     }
 
 config2={
-    'host': 'localhost',
+        'host': 'localhost',
         'port': 3306,
-        'database': 'user',
+        'database': 'frequency',
         'user': 'root',
-        'password': 'wsy20000812',
+        'password': 'abc@123',
         'charset': 'utf8',
         'use_unicode': True,
         'get_warnings': True,
@@ -34,7 +34,7 @@ create_order = (
         "    label TEXT , "
         "PRIMARY KEY (id))"
 )
-
+"""
 insert_order = "INSERT INTO test (time, title, info, url) VALUES (%s, %s, %s ,%s)"
 #在这里输入插入语句，注意格式第一个括号里面是对应的栏目，后一个括号全部是%s
 
@@ -44,7 +44,7 @@ select_order = "SELECT title FROM test WHERE id IN (1,2,3,4,5,6)"
 update_order = "UPDATE test SET status = %s WHERE id = %s"
 
 delete_order = "DELETE from test WHERE id = %s "
-
+"""
 
 class sql:
     __cnx = 0
@@ -57,23 +57,23 @@ class sql:
             print("Failed to connect")
             exit(-1)
         self.__cur = self.__cnx.cursor()
-    def create_table(self):
+    def create_table(self, create_order):
         try:
             self.__cur.execute(create_order)
             self.__cnx.commit()
             print("CREATE complete")
         except:
             print("Failed to create the database")
-            exit(-1)
-    def lines_insert(self,insert_oder, data):
+            raise(Exception());
+    def lines_insert(self,insert_oder):
         try:
-            self.__cur.executemany(insert_order,data)
+            self.__cur.execute(insert_order)
             self.__cnx.commit()
             print("Insert complete")
         except:
             print("Failed to INSERT")
             # self.feedback()
-            exit(-1)
+            
     def select_lines(self,select_order):
         try:
             output = []
@@ -83,21 +83,31 @@ class sql:
             return output
         except:
             print("Failed to SELECT")
-            exit(-1)
-    def update(self,update_order, data):
+            raise(Exception());
+    def update(self,update_order):
         try:
-            self.__cur.executemany(update_order,data)
+            self.__cur.execute(update_order)
             self.__cnx.commit()
             print("Update complete")
         except:
             print("Failed to update")
-            exit(-1)
+            return -1;
+    def isExsist(self, st):
+        try:
+            a = self.select_lines(st);
+            if (len(a) == 0): 
+                return 0;
+            else:
+                return 1;
+        except:
+            print("failed to find");
     def delete(self,delete_order, data):
         try:
             self.__cur.executemany(delete_order,data)
             self.__cnx.commit()
         except:
             print("Failed to delete")
+            raise(Exception());
 
 
 if __name__ == "__main__":
