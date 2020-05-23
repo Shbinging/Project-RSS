@@ -52,6 +52,7 @@ class sql:
     def __init__(self,config):
         try:
             self.__cnx = mysql.connector.connect(**config)
+            self.config = config;
             print("Connected")
         except:
             print("Failed to connect")
@@ -112,8 +113,4 @@ class sql:
 
 if __name__ == "__main__":
     sql1 = sql(config1)
-    result = sql1.select_lines("SELECT title FROM test WHERE id IN (1,2,3,4,5,6)");
-    print(result);
-   
-
-        
+    result = sql1.select_lines("SELECT column_name FROM information_schema.columns WHERE table_name='test';");       
