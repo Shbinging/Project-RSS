@@ -60,7 +60,7 @@ create_order=[
         "PRIMARY KEY (id))"
 ),
 
-(       "CREATE TABLE test2 ("
+(       "CREATE TABLE raw_info ("
         "    id INT UNSIGNED NOT NULL AUTO_INCREMENT, "
         "    status INT NOT NULL DEFAULT 0 , "
         "    time VARCHAR(200) , "
@@ -70,19 +70,30 @@ create_order=[
         "    label TEXT , "
         "PRIMARY KEY (id))"
 )
+,
+
+(       "CREATE TABLE user ("
+        "    id INT UNSIGNED NOT NULL AUTO_INCREMENT, "
+        "    username TEXT , "  
+        "    topics TEXT , "
+        "PRIMARY KEY (id))"
+)
 ]
 
 insert_order=[
 "INSERT INTO test (time, title, info, url) VALUES (%s, %s, %s ,%s)",
 
-"INSERT INTO test2 (time, title, info, url) VALUES (%s, %s, %s ,%s)"
+"INSERT INTO test2 (time, title, info, url) VALUES (%s, %s, %s ,%s)",
 #在这里输入插入语句，注意格式第一个括号里面是对应的栏目，后一个括号全部是%s
+"INSERT INTO user (username , topics) VALUES (%s , %s)"
 ]
 
 select_order=[
 "SELECT title FROM test WHERE status = 0",
 
-"SELECT title , time FROM test2 WHERE status = 0"
+"SELECT title , time FROM test2 WHERE status = 0",
+
+"SELECT username FROM user"
 #在这里输入MySQL的SELECT语句
 ]
 

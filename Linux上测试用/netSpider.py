@@ -3,6 +3,7 @@ import re
 import urllib.request,urllib.error
 import csv
 import codecs
+import mailClass as ml
 import mysqlClass as mc
 #import mailClass as ml
 #import timeAnalyze as ta
@@ -111,7 +112,7 @@ if __name__ == '__main__':
 #----------------------------------
 #数据库测试
     bad_url = []
-    sql1 = mc.sql(mc.config3)
+    sql1 = mc.sql(mc.configlinux)
     sql1.create_table(1)
     final_result = []
     for i in range(13,16):

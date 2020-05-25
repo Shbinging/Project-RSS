@@ -14,10 +14,10 @@ config1 = {
 
 config2={
     'host': 'localhost',
-        'port': 3306,
+        'port': 3308,
         'database': 'user',
         'user': 'root',
-        'password': 'wsy20000812',
+        'password': 'njuRSS2019.',
         'charset': 'utf8',
         'use_unicode': True,
         'get_warnings': True,
