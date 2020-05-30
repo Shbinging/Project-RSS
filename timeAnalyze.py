@@ -136,6 +136,6 @@ if (__name__ == "__main__"):
         st = fp.read();
         #print(re.findall("第二学期", st));
         a = timesplit();
-        a.analyze("教务处4月1-10日值班表");
+        a.analyze("【教师|学生】2019-2020学年第二学期停调课信息（实时更新）");
 
     

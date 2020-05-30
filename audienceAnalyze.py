@@ -4,9 +4,9 @@ class audiencesplit:
 	def find(self, st, backTime):
 		a = list(map(int, backTime.split('-')));
 		sem = 0;
-		if (9<= a[1] and a[1] <=12 or a[1] == 1):
+		if (8<= a[1] and a[1] <=12):
 			sem = 1;
-		if (2 <= a[1] and a[1] <= 8):
+		if (1 <= a[1] and a[1] <= 7):
 			sem = 2;
 		if (sem == 2):
 			freshman = a[0] - 1;
@@ -33,4 +33,4 @@ class audiencesplit:
 
 if (__name__ == "__main__"):
 	a = audiencesplit();
-	print(a.find("关于加强2020年本科毕业论文（设计）工作并开展情况排查的通知", "2020-04-17"));
+	print(a.find("【教师|学生】2019-2020学年第二学期停调课信息（实时更新）","2020-01-10"));
