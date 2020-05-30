@@ -24,14 +24,16 @@ def time_stamp():
 def mailmaker(data):
     mail = '''
 ------------------------------------------------------
-项目仍在测试中，为了保证你不遗漏重要信息，请访问末尾的URL链接\n
+项目仍在测试中，为了保证你不遗漏重要信息，请访问末尾的URL链接
+------------------------------------------------------\n
     '''
     for i in data:
         mail = mail + i +"\n"
     mail = mail+'''
 ------------------------------------------------------
 感谢参加教务处RSS订阅测试计划
-项目创建者：水兵、王颂言\n
+项目创建者：水兵、王颂言
+------------------------------------------------------\n
     '''
     mail = mail + time_stamp()
     return mail
@@ -51,8 +53,8 @@ class mail:
         subject = time_stamp() + "南京大学教务处 RSS 订阅"
         self.message['Subject'] = Header(subject,'utf-8')
         try:
-            self.smtpObj = smtplib.SMTP() 
-            self.smtpObj.connect(mail_host, 25)    # 25 为 SMTP 端口号
+            self.smtpObj = smtplib.SMTP_SSL(host = mail_host) 
+            self.smtpObj.connect(mail_host, 465)    # 25 为 SMTP 端口号
             self.smtpObj.login(mail_user,mail_pass)
         except self.smtplib.SMTPException:
             print("登陆失败")
@@ -67,7 +69,7 @@ class mail:
 
 if __name__ == "__main__":
     users = ['13638318926@qq.com']
-    data = ['titel','time','content','url','lable']
+    data = ['NJURSS','time','这是NJURSS服务器发送的测试信息','url','lable']
     mail1 = mailmaker(data)
     send1 = mail(mail1,users)
     send1.confirmToSend()

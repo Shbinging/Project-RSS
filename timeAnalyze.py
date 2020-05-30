@@ -118,13 +118,13 @@ class timesplit:
         
     def debug(self):
         print("0为时间点，1为时间段：", self.isinter, sep = '');
-        print("学期，年，月，日，小时，分钟", end = '');
+        print("学期，年，月，日，小时，分钟",end = '');
         print(self.sem, self.lyear, self.lmonth, self.lday, self.lh, self.lmin, sep = ' ');
-        print("学期，年，月，日，小时，分钟", end = '');
+        print("学期，年，月，日，小时，分钟",end = '');
         print(self.sem, self.ryear, self.rmonth, self.rday, self.rh, self.rmin, sep = ' ');
         print(self.st)
 
 a = timesplit();
-a. analyze("2019年春季江苏省计算机等级考试报名通知");
+a.analyze("2019年春季江苏省计算机等级考试报名通知");
 
     

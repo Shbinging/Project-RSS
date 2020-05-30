@@ -3,11 +3,9 @@ import re
 import urllib.request,urllib.error
 import csv
 import codecs
-import pymysql
-import MySQL_Class as mc
-import mailClass as ml
-import timeAnalyze as ta
-
+import mysqlClass as mc
+#import mailClass as ml
+#import timeAnalyze as ta
 
 
 re_url = re.compile(r'<a href="(.*htm)"')
@@ -21,7 +19,7 @@ def askURL(baseurl):
     req = urllib.request.Request(baseurl,headers=headers)
     html=""
     try:
-        res = urllib.request.urlopen(req,timeout=3000)
+        res = urllib.request.urlopen(req,timeout=10000)
         html = res.read().decode("utf-8")
         #print(html)
     except urllib.error.URLError as e:
@@ -43,9 +41,13 @@ def askURL(baseurl):
         items.append(item)
 
     dirurls = []
+
     for i in items:
+        if re.findall(re_url,i) == []:
+            continue
         dirurl = 'https://jw.nju.edu.cn/'+re.findall(re_url,i)[0]
         dirurls.append(dirurl)
+ 
     # print(dirurl)
 
 
@@ -68,8 +70,8 @@ def askURL(baseurl):
 
 
 def getData(zip_):
-    urls,htmls = zip(*zip_)
     datalist = []
+    urls,htmls = zip(*zip_)
     NUM = 1
     for html in htmls:
         data =[]
@@ -106,29 +108,44 @@ def spider(a):
      return result
 
 if __name__ == '__main__':
-    # final_result = []
-    # for i in range(1,11):
-    #     baseurl = "https://jw.nju.edu.cn/ggtz/list{}.htm".format(str(i))
-    #     final_result = final_result+spider(baseurl)
-    # for i in final_result:
-    #     print(i)
-    sql1 = mc.sql(mc.config1)
-    # sql1.create_table()
-    # sql1.lines_insert(final_result)
+#----------------------------------
+#数据库测试
+    bad_url = []
+    sql1 = mc.sql(mc.config3)
+    sql1.create_table(1)
+    final_result = []
+    for i in range(13,16):
+        baseurl = "https://jw.nju.edu.cn/ggtz/list{}.psp".format(str(i))
+        print(baseurl)
+        try:
+            sql1.lines_insert(1,spider(baseurl))
+        except:
+            bad_url.append(i)
+            continue
+    for i in final_result:
+        print(i)
+    print(bad_url)
+    
+    
+    
+    get = sql1.select_lines(1)
+    k = 1
+    for i in get:
+        print(i[0],i[1])
+        print(k)
+        k = k+1
 
 
-    # get = sql1.select_lines()
-    # for i in get:
-    #     print(i[0],i[1])
-
-
+#----------------------------------
+#邮件测试
     # data = []
     # for i in range(1,21):
     #     data.append([1,i])
     # sql1.update(data)
     # users = ['1065254539@qq.com']
-    get = sql1.select_lines()
+    # get = sql1.select_lines()
     
+
     # mails = []
     # for i in get:
     #     i = list(i)
@@ -138,8 +155,11 @@ if __name__ == '__main__':
     #     a = ml.mail(mail,users)
     #     a.confirmToSend()
 
-    a = ta.timesplit()
+#--------------------------------
+#内容识别测试
+
+    # a = ta.timesplit()
     
-    for i in get:
-        a.analyze(str(i))
+    # for i in get:
+    #     a.analyze(str(i))
    
