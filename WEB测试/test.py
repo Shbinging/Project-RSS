@@ -7,7 +7,7 @@ def index():
     sql1 = mc.sql(mc.config3)
     sql1.create_table(2)
     a = request.form.to_dict()
-    # print(a)
+    #print(a)
     if a != {}:
         name = a['username']
         topics = list(a.keys())

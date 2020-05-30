@@ -82,7 +82,9 @@ insert_order=[
 select_order=[
 "SELECT title FROM test WHERE status = 0",
 
-"SELECT title , time FROM test2 WHERE status = 0"
+"SELECT title , time FROM test2 WHERE status = 0",
+
+"SELECT time, title, info, url FROM test2 LIMIT 10"
 #在这里输入MySQL的SELECT语句
 ]
 
