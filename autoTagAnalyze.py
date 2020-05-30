@@ -178,7 +178,10 @@ class tagAnalyze:
             if (s > mx):
                 mx = s;
                 ans = pattern;
-        return ans;
+        list = [];
+        list.append(ans);
+        list.append(1);
+        return list;
 
     def rfindTime(self, rst, backTime):#2012-12-11
         timeana = timesplit();

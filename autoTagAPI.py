@@ -12,23 +12,29 @@ class autoTag:
 		a = tagAnalyze("audience");
 		self.ans["audience"] = a.rfindAudience(st, backTime);
 		config = makeConfig("tag");
+		needCheck = 0;
 		a = tagAnalyze("column", 0, 0, config,"wordbag",0);
-		self.ans["column"] = a.refind(st);
+		tmp = a.refind(st);
+		self.ans["column"] = tmp[0];
+		needCheck = max(needCheck, tmp[1]);
 		if (self.ans["column"] == "课程"):
 			a = tagAnalyze("课程_object",0,0,config,"wordbag",0);
-			self.ans["object"] = a.refind(st);
+			tmp = a.refind(st);
+			self.ans["object"] = tmp[0];
+			needCheck = max(needCheck, tmp[1]);
 			a = tagAnalyze("课程_activity",0,0,config,"wordbag",0);
-			self.ans["activity"] = a.refind(st);
+			tmp = a.refind(st);
+			self.ans["activity"] = tmp[0];
+			needCheck = max(needCheck, tmp[1]);
 		if (self.ans["column"] == "考试"):
 			a = tagAnalyze("考试_object",0,0,config,"wordbag",0);
-			self.ans["object"] = a.refind(st);
-		b = ["time", "column", "object", "activity", "audience"];
-		for word in b:
-			print(word, end = '\t             ');
-		print();
-		for word in b:
-			print(self.ans[word], end = '\t');
-		print();
+			tmp = a.refind(st);
+			self.ans["object"] = tmp[0];
+			needCheck = max(needCheck, tmp[1]);
+		list = [];
+		list.append(self.ans);
+		list.append(needCheck);
+		return list;
 
 if (__name__ == "__main__"):
 	config = makeConfig("notification");
