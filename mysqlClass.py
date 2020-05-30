@@ -25,10 +25,10 @@ config2={
 
 config3={
         'host': 'localhost',
-        'port': 3308,
+        'port': 3306,
         'database': 'RSS',
         'user': 'root',
-        'password': 'njuRSS2019.',
+        'password': 'abc@123',
         'charset': 'utf8',
         'use_unicode': True,
         'get_warnings': True,
@@ -40,7 +40,7 @@ configlinux={
         'port': 3306,
         'database': 'RSS',
         'user': 'root',
-        'password': 'njuRSS2019.',
+        'password': 'abc@123',
         'charset': 'utf8',
         'use_unicode': True,
         'get_warnings': True,

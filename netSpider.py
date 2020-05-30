@@ -5,8 +5,6 @@ import csv
 import codecs
 import mailClass as ml
 import mysqlClass as mc
-#import mailClass as ml
-#import timeAnalyze as ta
 
 
 re_url = re.compile(r'<a href="(.*htm)"')
@@ -29,9 +27,8 @@ def askURL(baseurl):
         if hasattr(e,"reason"):
             print(e,"reason")
     soup = BeautifulSoup(html,"html.parser")
-
     string = []
-    for i in range(1,15):
+    for i in range(1,6):
         i = "news n" + str(i) +" clearfix"
         string.append(i)
 
@@ -108,33 +105,56 @@ def spider(a):
      result = getData(pack_)
      return result
 
-if __name__ == '__main__':
-#----------------------------------
-#数据库测试
+def netSpider():
     bad_url = []
-    sql1 = mc.sql(mc.configlinux)
+    sql1 = mc.sql(mc.config3)
     sql1.create_table(1)
     final_result = []
-    for i in range(13,16):
-        baseurl = "https://jw.nju.edu.cn/ggtz/list{}.psp".format(str(i))
-        print(baseurl)
-        try:
-            sql1.lines_insert(1,spider(baseurl))
-        except:
-            bad_url.append(i)
-            continue
-    for i in final_result:
-        print(i)
-    print(bad_url)
+    baseurl = "https://jw.nju.edu.cn/ggtz/list1.htm"
+    a = spider(baseurl)
+    compare_ = []
+    to_sql = []
+    b = sql1.select_lines(2)
+    for i in b :
+        # print(i[1])
+        compare_.append(i)
+    for i in a:
+        if i not in compare_:
+            to_sql.append(i)
+    print("YSES")
+    for i in to_sql:
+        print(i[1])
+    if to_sql == []:
+        return 0
+    else :
+        sql1.lines_insert(1,to_sql)
+        return 1
+   
+
     
     
     
-    get = sql1.select_lines(1)
-    k = 1
-    for i in get:
-        print(i[0],i[1])
-        print(k)
-        k = k+1
+       
+
+
+
+    # for i in range(13,16):
+    #     baseurl = "https://jw.nju.edu.cn/ggtz/list{}.html".format(str(i))
+    #     print(baseurl)
+    #     try:
+    #         sql1.lines_insert(1,spider(baseurl))
+    #     except:
+    #         bad_url.append(i)
+    #         continue
+    # for i in final_result:
+    #     print(i)
+    # print(bad_url)
+    # get = sql1.select_lines(1)
+    # k = 1
+    # for i in get:
+    #     print(i[0],i[1])
+    #     print(k)
+    #     k = k+1
 
 
 #----------------------------------
