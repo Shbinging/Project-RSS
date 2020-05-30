@@ -30,9 +30,14 @@ while(1):
 	#updateSpider();
 	titleList = getNewInfo();
 	confirmList= [];#手工确认
+	###########################################
+	#取出要发送的消息
 	for title in titleList:
 		aTag = autoTag();
 		confirmList.append(aTag.analyze(title[0], title[1]));
+
+	###########################################
+	#标签确认
 	tags = WordBag.queryL("word");
 	print("标签：");
 	for tag in tags:
@@ -43,6 +48,7 @@ while(1):
 	for i in range(0, len(confirmList)):
 		if (confirmList[i][1] == 0):
 			continue;
+		print("-----------------------------------------------------------------------------");
 		print(titleList[i][0]);
 		printList(b);
 		for j in b:
@@ -60,6 +66,7 @@ while(1):
 					confirmList[i][0][b[k]] = item;
 			except:
 				print("输入错误！");
+
 			for j in b:
 				print(confirmList[i][0][j], end = '\t');
 			print();
@@ -67,7 +74,5 @@ while(1):
 			if (opt == "Yes"):
 				break;
 			opt = input("输入");
-		print("------------------------------------------------------------------------------");
-	break;
-		
+	############################################
 		
