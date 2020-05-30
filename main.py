@@ -26,7 +26,7 @@ def printList(a):
 
 def getNewInfo():## title time url
 	ans = [];
-	for i in range(5, 10):
+	for i in range(1, 5):
 		if (RSS.queryXY("id", i, "status")[0] == 1):
 			continue;
 		item = [];
@@ -51,7 +51,7 @@ def getStrTag(a):
 	return ",".join(list);
 
 while(1):
-	ff = 1;
+	ff = 0;
 	if (ff):
 		User.edit("username", "1436775971@qq.com", "topics", "16");
 		#User.edit("username", "1436775971@qq.com", "grade", "4");
@@ -73,7 +73,7 @@ while(1):
 	#	sendMail.confirmToSend();
 	###########################################
 	#标签确认
-	"""
+	
 	print("-----------------------------------------------------------------------------");
 	print("标签确认");
 	print("-----------------------------------------------------------------------------");
@@ -115,7 +115,7 @@ while(1):
 				break;
 			opt = input("输入");
 	print("确认完毕");
-	"""
+	
 	############################################
 	#发送邮件
 	userList = getList(User.queryL("username"));
@@ -136,6 +136,6 @@ while(1):
 		strTag = getStrTag(confirm[0]);
 		if (len(sendList) > 0):
 			sendMail = mail([titleList[i][0], strTag, titleList[i][2]],sendList);
-			#sendMail.confirmToSend();
+			sendMail.confirmToSend();
 		#RSS.edit("url",titleList[i][2],"status", 1);
 	break;
