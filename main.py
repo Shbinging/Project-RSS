@@ -6,10 +6,15 @@
 from autoTagAPI import autoTag;
 from adeq import adeqSql;
 from adeq import makeConfig;
+from mailClass import mail;
 
 RSS = adeqSql(makeConfig("RSS"), "test2");
 b = ["column", "object", "activity", "audience"];
 WordBag = adeqSql(makeConfig("tag"),"wordbag");
+User = adeqSql(makeConfig("user"),"user");
+
+column = ["1", "课程","考试","毕业","交流","竞赛","专业分流","其他"];
+administrator = ["1436775971@qq.com"];
 
 def printList(a):
 	for item in a:
@@ -27,17 +32,31 @@ def getNewInfo():## title time url
 	return ans;
 
 while(1):
+	ff = 1;
+	if (ff):
+		
+	print("######################################################################");
 	#updateSpider();
 	titleList = getNewInfo();
 	confirmList= [];#手工确认
 	###########################################
 	#取出要发送的消息
+	flag = 0;
 	for title in titleList:
 		aTag = autoTag();
+		tmp = aTag.analyze(title[0], title[1]);
 		confirmList.append(aTag.analyze(title[0], title[1]));
-
+		if (tmp[1] == 1):
+			flag = 1;
+	#if (flag):
+	#	sendMail = mail(["有新消息","标签确认",""], administrator);
+	#	sendMail.confirmToSend();
 	###########################################
 	#标签确认
+	print("-----------------------------------------------------------------------------");
+	print("标签确认");
+	print("-----------------------------------------------------------------------------");
+	print("-----------------------------------------------------------------------------");
 	tags = WordBag.queryL("word");
 	print("标签：");
 	for tag in tags:
@@ -74,5 +93,6 @@ while(1):
 			if (opt == "Yes"):
 				break;
 			opt = input("输入");
+	print("确认完毕");
 	############################################
-		
+	#发送邮件
