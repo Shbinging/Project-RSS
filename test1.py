@@ -1,1 +1,0 @@
-asdfkadsfgit  config  --system  --unset  credential.helper
