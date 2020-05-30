@@ -10,7 +10,3 @@ with open("text.txt") as fp:
         print(w.word, w.flag, sep = '/' ,end = ' ');
     ret = re.findall("学期+", st);
     print(ret);
-
-
-	
-	
