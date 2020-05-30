@@ -22,13 +22,11 @@ def time_stamp():
     return otherStyleTime
 
 def mailmaker(data):
-    mail = '''
-------------------------------------------------------
-项目仍在测试中，为了保证你不遗漏重要信息，请访问末尾的URL链接
+    mail = '''------------------------------------------------------
+项目仍在测试中，为了保证你不遗漏重要信息，请访问原文URL链接
 ------------------------------------------------------\n
     '''
-    for i in data:
-        mail = mail + i +"\n"
+    mail = mail + data+"\n"
     mail = mail+'''
 ------------------------------------------------------
 感谢参加教务处RSS订阅测试计划
@@ -45,12 +43,13 @@ class mail:
     message['To'] =  Header("测试用户", 'utf-8')
     message['Subject'] = Header('RSS订阅测试', 'utf-8')
     smtpObj = smtplib.SMTP() 
-    def __init__(self,mail,users):
+    def __init__(self,data,users):
+        mail_content = mailmaker(data[2])
         self.receivers = users
-        self.message = MIMEText(mail,'plain','utf-8')
+        self.message = MIMEText(mail_content,'plain','utf-8')
         self.message['From'] = Header("RSS Project",'utf-8')
         self.message['To'] = Header("RSS用户",'utf-8')
-        subject = time_stamp() + "南京大学教务处 RSS 订阅"
+        subject = time_stamp() + " " +data[0]+" "+data[1]
         self.message['Subject'] = Header(subject,'utf-8')
         try:
             self.smtpObj = smtplib.SMTP_SSL(host = mail_host) 
@@ -69,7 +68,6 @@ class mail:
 
 if __name__ == "__main__":
     users = ['13638318926@qq.com']
-    data = ['NJURSS','time','这是NJURSS服务器发送的测试信息','url','lable']
-    mail1 = mailmaker(data)
-    send1 = mail(mail1,users)
+    data = ['title','tag','url']
+    send1 = mail(data,users)
     send1.confirmToSend()
