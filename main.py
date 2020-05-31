@@ -7,7 +7,7 @@ from autoTagAPI import autoTag;
 from adeq import adeqSql;
 from adeq import makeConfig;
 from mailClass import mail;
-
+from netSpider import netSpider;
 RSS = adeqSql(makeConfig("RSS"), "test2");
 b = ["column", "object", "activity", "audience"];
 WordBag = adeqSql(makeConfig("tag"),"wordbag");
@@ -56,7 +56,7 @@ while(1):
 		User.edit("username", "1436775971@qq.com", "topics", "16");
 		#User.edit("username", "1436775971@qq.com", "grade", "4");
 	print("######################################################################");
-	#updateSpider();
+	netSpider();
 	titleList = getNewInfo();
 	confirmList= [];#手工确认
 	###########################################
@@ -136,6 +136,6 @@ while(1):
 		strTag = getStrTag(confirm[0]);
 		if (len(sendList) > 0):
 			sendMail = mail([titleList[i][0], strTag, titleList[i][2]],sendList);
-			sendMail.confirmToSend();
+			#sendMail.confirmToSend();
 		#RSS.edit("url",titleList[i][2],"status", 1);
 	break;

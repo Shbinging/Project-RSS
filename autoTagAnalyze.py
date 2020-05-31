@@ -20,11 +20,15 @@ class tagAnalyze:
             self.trainData.createTable("train_"+trainName);
             self.analyzeData = adeqSql(Config, "analyze_"+trainName);
             self.analyzeData.createTable("analyze_"+trainName);
+            self.sumData = adeqSql(Config, "sum_"+ trainName);
+            self.sumData.createTable("sum_"+trainName);
             self.prepareContextTable();
             self.prepareAnalyzeTable();
+            self.prepareSumTable();
         else:
             self.trainData = adeqSql(Config, "train_"+trainName);
             self.analyzeData = adeqSql(Config, "analyze_"+trainName);
+            self.sumData = adeqSql(Config, "sum_"+ trainName);
 
     def clearContextTable(self):
         self.trainData.clearTable();
@@ -32,13 +36,16 @@ class tagAnalyze:
     def clearAnalyzeTable(self):
         self.analyzeData.clearTable();
 
+    def clearSumTable(self):
+        self.sumData.clearTable();
+
     def setContextTableNotAnalyze(self):
         n = self.trainData.getTableSize();
         for i in range(1, n):
             self.trainData.edit("id", i, "isAnalyze", 0);
 
     def prepareContextTable(self, tagName = "@", value = ""):#isnew 1全部手工重建 0 改变已经训练标签为未训练 
-        isNew = 1;
+        isNew = 0;
         if (isNew):
             self.trainData.clearTable();
             self.trainData.createColumn("isAnalyze", "int DEFAULT 0");
@@ -55,6 +62,14 @@ class tagAnalyze:
                 title = self.fromData.queryXY("id", i, self.fromDataTag)[0];
                 self.trainData.insertKey("title", title);
                 self.trainData.edit("id", i, "isAnalyze", 0);
+
+    def prepareSumTable(self):
+        a = self.getwordBag();
+        print(a);
+        self.sumData.insertKey(a[0], 0);
+        for tagWord in a:
+            self.sumData.createColumn(tagWord, "int default 0");
+            self.sumData.edit(id, 1, tagWord, 0);
 
     def getwordBag(self):
         a = self.wordBagData.queryXY("tag", self.trainName, "word")[0].split(',');
@@ -119,6 +134,9 @@ class tagAnalyze:
             if (tmp == None): continue;
             #if (tmp == "其他"):
              #   continue;
+            s1 = self.sumData.queryXY("id", 1, tmp)[0];
+            s1 += 1;
+            self.sumData.edit("id",1, tmp, s1);
             for word in seg_list:
 
                 if (self.analyzeData.hasKey("word", word)):#如果该词语存在就加1
@@ -225,57 +243,23 @@ class tagAnalyze:
         a = audiencesplit();
         return a.find(rst, backTime);
 
+
+
+
 if (__name__ == "__main__"):
     config = makeConfig("notification");
     fromData = adeqSql(config, "test2");
     config1 = makeConfig("tag");
-    
-    backTime = fromData.queryXY("id", 10, "time")[0].split('：')[1];
-    st = fromData.queryXY("id", 10, "title")[0];
-    a = tagAnalyze("audience");
-    print(st);
-    print(backTime);
-    print(a.rfindTime("江苏省计算机等级考试二级Python语言模拟试点考试报名通知 ", "2016-11-10"));
-    """
+######################################################
+#增加对标签的分类统计
+"""
     name = "考试_object";
-    a = tagAnalyze(name,fromData, "title", config1, "wordbag", 0);
-    a.analyzeData.printTable();
-    """
-    """
-    name = "课程_activity";
-    a = tagAnalyze(name,fromData, "title", config1, "wordbag", 0);
-    old = tagAnalyze("column",fromData, "title", config1,  "wordbag", 0);
+    a = tagAnalyze(name, fromData, "title", config1, "wordbag", 1);
+    a.clearAnalyzeTable();
+    a.prepareSumTable();
     a.analyzeTrain();
+    a.sumData.printTable();
     a.analyzeData.printTable();
-
-    """
-    """
-    !!!!!!
-
-    !!!!!!!
-    warning:
-    tagAnalyze 参数顺序改变了
-
-    new = 0;
-    name = "考试_object";
-
-
-    if (new):
-        dataBag = adeqSql(config1, "wordbag");
-        dataBag.insertKey("tag", name);
-        dataBag.edit("tag", name,"word", "网络考试,英语口语考试,计算机等级考试,四六级及学位英语考试,期中考试,期末考试,其他考试,起始考试,补考,缓考");
-        dataBag.edit("tag", name, "filter", "的,通知,公告,公示,关于,【,】, ,(,),0,1,2,3,4,5,6,7,8,9,（,）,《,》,[,],南京大学,本科生,学校");
-        dataBag.printTable();
-    a = tagAnalyze(fromData, "title", config1, name, "wordbag", new);
-    old = tagAnalyze(fromData, "title", config1, "column", "wordbag", 0);
-    print(" ----");
-    ana = 0;
-    if (ana):
-        a.analyzeByHand(1,200);
-        a.analyzeTrain();
-    if (not ana and not new):
-        dataBag = adeqSql(config1, "wordbag");
-        dataBag.printTable();
-        print(a.refind("2020年春季学期超星尔雅在线课程考试提醒"));
-    """
-   
+"""
+######################################################
+    
