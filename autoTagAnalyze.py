@@ -120,7 +120,9 @@ class tagAnalyze:
 
     def analyzeTrain(self):
         n = self.trainData.getTableSize();
+        ss = 0;
         for i in range(1, n):
+            
             title = self.trainData.queryXY("id", i, "title")[0];
             ##时间词过滤
             timer = timesplit();
@@ -128,15 +130,19 @@ class tagAnalyze:
             ##语法、无效词过滤
             title = self.filterWord(title);
             ##词频统计
-            seg_list = jieba.lcut_for_search(title);
+            seg_list = jieba.lcut(title);
 
             tmp = self.trainData.queryXY("id", i, "tag")[0];
             if (tmp == None): continue;
+            
             #if (tmp == "其他"):
              #   continue;
+            if (tmp == "课程"):
+                ss += 1;
             s1 = self.sumData.queryXY("id", 1, tmp)[0];
             s1 += 1;
             self.sumData.edit("id",1, tmp, s1);
+            seg_list = list(set(seg_list));
             for word in seg_list:
 
                 if (self.analyzeData.hasKey("word", word)):#如果该词语存在就加1
@@ -147,8 +153,8 @@ class tagAnalyze:
                 else:#否则增加该词语
                     self.analyzeData.insertKey("word", word);
                     self.analyzeData.edit("word", word, tmp, 1);
-             
-
+        print(ss);  
+           
     def sum(self, b):
         s = 0;
         for i in b:
@@ -178,6 +184,66 @@ class tagAnalyze:
             ans = ans * e /self.sum1(d);
         return ans*100;
 
+    def fBayes(self, segList,pattern):#朴素贝叶斯+拉普拉斯修正进行标签权重计算
+        a = self.getwordBag();
+       # d = self.analyzeData.queryH("word", word);
+        b = self.sumData.queryH("id", 1);
+        tagSum = len(b[0][1:]);#标签的种类数
+        s1 = self.sum(b[0][1:]);##计算所有标签出现的次数;
+        s2 = 0;##计算所有单词出现总次数
+        s5 = self.sumData.queryXY("id", 1, pattern)[0];
+        for word in segList:
+            if (not self.analyzeData.hasKey("word", word)):
+                continue;
+            s2 += self.sum(self.analyzeData.queryH("word", word)[0][2:]);
+        #for word in segList:
+        pPattern = (self.sumData.queryXY("id", 1, pattern)[0]+1) / (s1+2);#统计改标签的概率
+        ss = pPattern;#贝叶斯概率
+        tmp = self.analyzeData.queryL(pattern);
+        s3 = self.sum1(tmp);#某标签下所有单词出现的次数
+        wordSum = len(tmp);
+        for word in segList:
+            if (not self.analyzeData.hasKey("word", word)):
+                continue;
+                ss = ss*1/(s5+2);
+                ss = ss/(1/(wordSum));
+                #ss = ss/(1/(s1+2));
+            else:
+                tmp1 = self.analyzeData.queryXY("word", word, pattern)[0];
+                s4 = self.sum(self.analyzeData.queryH("word", word)[0][2:]);##某个单词出现总次数;
+                #if (tmp1 == 0 or s4 == 0):continue;
+                ss = ss*(tmp1+1)/(s5+2);
+                #ss = ss/((s4+1)/(s1 + 2));
+                ss = ss/((s4+1)/(s3 + wordSum));
+                #print(word, tmp1, s3, (tmp1+1)/(s3+2));
+                #print(word, 1/((tmp1+1)/(s4 + tagSum)));
+        return ss;
+
+
+    
+    def refind1(self, title):
+        a = self.getwordBag();
+        timer = timesplit();
+        title = timer.analyze(title);
+        title = self.filterWord(title);
+        seg_list = jieba.lcut(title);
+        mx = -1;
+        ans = '';
+        for pattern in a:
+            #s = 1;
+            #for word in seg_list:
+             #   s *= self.f(word, pattern);
+                #if (pattern == "交流"):
+                #print(pattern , word, self.f(word, pattern));
+            s = self.fBayes(seg_list, pattern);
+            if (s > mx):
+                mx = s;
+                ans = pattern;
+        list = [];
+        list.append(ans);
+        list.append(1);
+        return list;
+
     def refind(self, title):
         a = self.getwordBag();
         timer = timesplit();
@@ -198,7 +264,11 @@ class tagAnalyze:
                 ans = pattern;
         list = [];
         list.append(ans);
-        list.append(1);
+        ans1 = self.refind1(title)[0];
+        if (ans1 == ans):
+            list.append(0);
+        else:
+            list.append(1);
         return list;
 
     def rfindTime(self, rst, backTime):#2012-12-11
@@ -250,16 +320,23 @@ if (__name__ == "__main__"):
     config = makeConfig("notification");
     fromData = adeqSql(config, "test2");
     config1 = makeConfig("tag");
+    name = "column";
+    a = tagAnalyze(name, fromData, "title", config1, "wordbag", 0);
+    st = "关于“悦读经典计划”悦读学分认定的说明（2019-2020学年第一学期）";
+    print(a.refind(st));
+    print(a.refind1(st));
+    #print(a.analyzeData.queryXY("id", 1, "网络考试"));
 ######################################################
 #增加对标签的分类统计
 """
-    name = "考试_object";
-    a = tagAnalyze(name, fromData, "title", config1, "wordbag", 1);
+    name = "课程_activity";
+    a = tagAnalyze(name, fromData, "title", config1, "wordbag", 0);
+    a.clearSumTable();
     a.clearAnalyzeTable();
     a.prepareSumTable();
     a.analyzeTrain();
     a.sumData.printTable();
     a.analyzeData.printTable();
-"""
+   """
 ######################################################
     

@@ -26,7 +26,8 @@ def printList(a):
 
 def getNewInfo():## title time url
 	ans = [];
-	for i in range(1, 5):
+	n = RSS.getTableSize();
+	for i in range(1, n+1):
 		if (RSS.queryXY("id", i, "status")[0] == 1):
 			continue;
 		item = [];
@@ -51,12 +52,15 @@ def getStrTag(a):
 	return ",".join(list);
 
 while(1):
-	ff = 0;
+	##########################################
+	#debug
+	ff = 1;
 	if (ff):
-		User.edit("username", "1436775971@qq.com", "topics", "16");
+		User.edit("username", "1436775971@qq.com", "topics", "13");
 		#User.edit("username", "1436775971@qq.com", "grade", "4");
+	##########################################
 	print("######################################################################");
-	netSpider();
+	#netSpider();
 	titleList = getNewInfo();
 	confirmList= [];#手工确认
 	###########################################
@@ -68,9 +72,9 @@ while(1):
 		confirmList.append(aTag.analyze(title[0], title[1]));
 		if (tmp[1] == 1):
 			flag = 1;
-	#if (flag):
-	#	sendMail = mail(["有新消息","标签确认",""], administrator);
-	#	sendMail.confirmToSend();
+	if (flag):
+		sendMail = mail(["有新消息","标签确认",""], administrator);
+		sendMail.confirmToSend();
 	###########################################
 	#标签确认
 	
@@ -134,8 +138,9 @@ while(1):
 				if (isIN or confirm[0]["column"] != "课程"):
 					sendList.append(userList[j]);
 		strTag = getStrTag(confirm[0]);
+		print(sendList);
 		if (len(sendList) > 0):
 			sendMail = mail([titleList[i][0], strTag, titleList[i][2]],sendList);
-			#sendMail.confirmToSend();
-		#RSS.edit("url",titleList[i][2],"status", 1);
+			sendMail.confirmToSend();
+		RSS.edit("url",titleList[i][2],"status", 1);
 	break;
