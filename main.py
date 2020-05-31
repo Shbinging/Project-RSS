@@ -27,7 +27,9 @@ def printList(a):
 def getNewInfo():## title time url
 	ans = [];
 	n = RSS.getTableSize();
-	for i in range(1, n+1):
+	list = RSS.queryL("id");
+	for id in list:
+		i = id[0];
 		if (RSS.queryXY("id", i, "status")[0] == 1):
 			continue;
 		item = [];
